@@ -13,6 +13,7 @@ function getComputerChoice(){
 function playRound(playerSelection,computerSelection){
     // Compare user input with random computer choice.
     // Rock beats scissors, scissors beats paper, paper beats rock. 
+    // In case of tie, output appropriate message.
     switch(computerSelection){
         case 'Rock':
             if(playerSelection == 'Paper') return "You Win! Paper beats Rock";
@@ -29,14 +30,17 @@ function playRound(playerSelection,computerSelection){
     }
 }
 
+// Handles user input to ensure its the same as choice in choices array
 function title(choice){
     return choice.charAt(0).toUpperCase() + choice.substr(1).toLowerCase();
 }
 
+// Get user choice 
 let userInput = prompt('Enter rock paper or scissors:');
 //console.log(title(userInput));
 while(!choices.includes(title(userInput))){
     userInput = prompt('Enter rock paper or scissors:');
 }
+// Output result to console.
 console.log(playRound(title(userInput),getComputerChoice()));
 
