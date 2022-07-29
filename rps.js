@@ -3,81 +3,116 @@
 // Create function that plays a single round of rock paper scissors
 // Outputs result of game. 
 choices = ['Rock','Paper','Scissors'];
+userScore = 0;
+computerScore = 0;
 
-function getComputerChoice(){
-    // Randomly choose rock paper or scissors
-    const randomChoice = Math.floor(Math.random()*choices.length);
-    return choices[randomChoice];
+function gameStart(){
+    // Get buttons nodelist
+    const buttons = document.querySelectorAll('button');
+    // Iterate through nodelist to assign each button a function
+    buttons.forEach((button) => {
+        button.addEventListener('click',() => {
+            playRound(button.textContent);
+        });
+    });
 }
 
-function playRound(playerSelection,computerSelection){
+function checkHasWinner(player,comp){
+    // Winner if score is 5
+    if(Math.max(player,comp) == 5){
+        return true;
+    }
+    return false;
+}
+
+function getWinner(){
+    if(userScore >= 5){
+        return "Player";
+    }
+    else if(computerScore == 5){
+        return "Computer";
+    }
+}
+
+function playRound(text){
+    if(declareWinner()){
+        reset();
+    }
+    document.querySelector('.result').textContent = roundResult(text);
+    updateScoreDisplays();
+    return;
+}
+function declareWinner(){
+    // Check if there is a winner
+    if(checkHasWinner(userScore,computerScore)){
+        document.querySelector('.winner').textContent = "The winner of the game is: " + getWinner();
+        // Reset all scores
+        return true;
+    }
+    return false;
+}
+function updateScoreDisplays(){
+    document.querySelector('.playerScore').textContent = 'Player Score: '  + userScore;
+    document.querySelector('.compScore').textContent = 'Computer Score: '  + computerScore;
+}
+function roundResult(playerSelection){
     // Compare user input with random computer choice.
     // Rock beats scissors, scissors beats paper, paper beats rock. 
     // In case of tie, output appropriate message.
-    switch(computerSelection){
+    const computerChoice = choices[Math.floor(Math.random()*choices.length)];
+    switch(computerChoice){
         case 'Rock':
             if(playerSelection == 'Paper'){
-                console.log("You Win! Paper beats Rock");
-                return 1;
-            } else if(playerSelection == 'Rock'){
-                console.log("Tie! You both chose " + computerSelection);
-                return 0;
-            }
+                userScore++;
+                declareWinner()
+                return "You Win! Paper beats Rock";
+            } 
+            else if(playerSelection == 'Rock') return "Tie! You both chose " + computerChoice;
             else{
-                console.log('You Lose! Rock beats ' + playerSelection);
-                return -1;
+                computerScore++;
+                declareWinner()
+                return 'You Lose! Rock beats ' + playerSelection;
             }
         case 'Paper':
             if(playerSelection == 'Scissors'){
-                console.log("You Win! Scissors beats Paper");
-                return 1;
-            } else if(playerSelection == 'Paper'){
-                console.log("Tie! You both chose " + computerSelection);
-                return 0;
-            }
+                userScore++;
+                declareWinner()
+                return "You Win! Scissors beats Paper";
+            } 
+            else if(playerSelection == 'Paper') return "Tie! You both chose " + computerChoice;
             else{
-                console.log('You Lose! Paper beats ' + playerSelection);
-                return -1;
+                computerScore++;
+                declareWinner()
+                return 'You Lose! Paper beats ' + playerSelection;
             }
         case 'Scissors':
             if(playerSelection == 'Rock'){
-                console.log("You Win! Rock beats Scissors");
-                return 1;
-            } else if(playerSelection == 'Scissors'){
-                console.log("Tie! You both chose " + computerSelection);
-                return 0;
-            }
+                userScore++;
+                declareWinner()
+                return "You Win! Rock beats Scissors";
+            } 
+            else if(playerSelection == 'Scissors') return "Tie! You both chose " + computerChoice;
             else{
-                console.log('You Lose! Scissors beats ' + playerSelection);
-                return -1;
+                computerScore++;
+                declareWinner()
+                return 'You Lose! Scissors beats ' + playerSelection;
             }
     }
+    return false;
 }
 
-// Handles user input to ensure its the same as choice in choices array
-function title(choice){
-    return choice.charAt(0).toUpperCase() + choice.substr(1).toLowerCase();
+function reset(){
+    userScore = 0;
+    computerScore = 0;
+    // Get the element which we will be manipulating
+    document.querySelector('.winner').textContent = "";
+    document.querySelector('.result').textContent = "";
+    document.querySelector('.playerScore').textContent = "Player Score: 0";
+    document.querySelector('.compScore').textContent = "Comp Score: 0";
 }
 
-function game(games){
-    let score = 0;
-    for(let i  = 0, n = games; i < n; ++i){
-        let userInput = prompt('Enter rock paper or scissors:');
-        let result = playRound(title(userInput),getComputerChoice());
-        if(result == 1){
-            score++;
-        }
-    }
-    console.log("Your final score was " + score);
-    return score
-}
+gameStart();
 
-// Get user choice 
-//let userInput = prompt('Enter rock paper or scissors:');
-//console.log(title(userInput));
-//while(!choices.includes(title(userInput))){
-//    userInput = prompt('Enter rock paper or scissors:');
-//}
-// Output result to console.
-//console.log(playRound(title(userInput),getComputerChoice()));
-game(5);
+
+
+
